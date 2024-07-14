@@ -28,6 +28,17 @@ import (
 	"course/labrpc"
 )
 
+// define Role:candidate ,follower,leader
+type Role string
+
+const (
+	Follower  Role = "follower"
+	Candidate Role = "candidate"
+	Leader    Role = "leader"
+)
+
+// enum
+
 // as each Raft peer becomes aware that successive log entries are
 // committed, the peer should send an ApplyMsg to the service (or
 // tester) on the same server, via the applyCh passed to Make(). set
@@ -37,6 +48,8 @@ import (
 // in part PartD you'll want to send other kinds of messages (e.g.,
 // snapshots) on the applyCh, but set CommandValid to false for these
 // other uses.
+
+// add Role ,term ,start_time,end_time,etc
 type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
@@ -57,10 +70,69 @@ type Raft struct {
 	me        int                 // this peer's index into peers[]
 	dead      int32               // set by Kill()
 
+	role            Role
+	currentTerm     int
+	votedFor        int //vote who (-1 present null)
+	electionStart   time.Time
+	electionTimeOut time.Duration
 	// Your data here (PartA, PartB, PartC).
+	// add yourself struct
 	// Look at the paper's Figure 2 for a description of what
 	// state a Raft server must maintain.
 
+}
+
+// state change
+func (rf *Raft) becomeFollowerLocked(term int) {
+	// compare term ,if term is lower than rf.term ,do not change
+	if rf.currentTerm > term {
+		// add log
+		LOG(rf.me, rf.currentTerm, DError, "cant become follower ,because the term is T%d", term)
+
+		return
+	}
+	// log
+	LOG(rf.me, rf.currentTerm, DLog, "%s->Follower,For T%s->%s", rf.role, rf.currentTerm, term)
+	rf.role = Follower
+	if rf.currentTerm < term {
+		rf.votedFor = -1
+	}
+	rf.currentTerm = term
+	// all term
+
+}
+
+func (rf *Raft) becomeCandidateLocked() {
+	// compare term ,if term is lower than rf.term ,do not change
+	if rf.role == Leader {
+		// add log
+		LOG(rf.me, rf.currentTerm, DVote, "cant become candidate ")
+
+		return
+	}
+	// log
+	LOG(rf.me, rf.currentTerm, DVote, "%s->Candidate,For T%d", rf.role, rf.currentTerm+1)
+	rf.role = Candidate
+	// 选举人的任期+1,并且投票自己
+	rf.currentTerm++
+	rf.votedFor = rf.me
+	// me 代表序号
+	// all term
+
+}
+
+func (rf *Raft) becomeLeaderLocked() {
+
+	if rf.role != Candidate {
+		LOG(rf.me, rf.currentTerm, DError, "cant become Leader ")
+
+		return
+
+		//
+	}
+	LOG(rf.me, rf.currentTerm, DLeader, "Become Leader,in T%d", rf.currentTerm)
+
+	rf.role = Leader
 }
 
 // return currentTerm and whether this server
@@ -240,7 +312,13 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.me = me
 
 	// Your initialization code here (PartA, PartB, PartC).
+	/*
+		init the filed that you have added
+	*/
 
+	rf.role = Follower
+	rf.currentTerm = 0
+	rf.votedFor = -1
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
 
