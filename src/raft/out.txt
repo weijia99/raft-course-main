@@ -1,0 +1,1414 @@
+000007 T0000 VOTE S0 follower->Candidate,For T1
+Test (PartA): initial election ...
+000012 T0000 VOTE S1 follower->Candidate,For T1
+000012 T0000 VOTE S2 follower->Candidate,For T1
+000018 T0001 VOTE S2 Reject vote from s0,For T1
+000018 T0001 VOTE S0 Reject vote from s1,For T1
+000018 T0001 VOTE S1 Reject vote from s0,For T1
+000020 T0001 VOTE S1 Reject vote from s2,For T1
+000020 T0001 VOTE S2 Reject vote from s1,For T1
+000020 T0001 VOTE S0 Reject vote from s2,For T1
+000541 T0001 VOTE S0 candidate->Candidate,For T2
+==================
+WARNING: DATA RACE
+Write at 0x00c00003a138 by goroutine 9:
+  course/raft.(*Raft).becomeCandidateLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:138 +0x2e4
+  course/raft.(*Raft).electionTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:509 +0x274
+  course/raft.Make.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x33
+
+Previous read at 0x00c00003a138 by goroutine 13:
+  course/raft.(*Raft).contextLostLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:344 +0x175
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:461 +0x1e0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 9 (running) created at:
+  course/raft.Make()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x224
+  course/raft.(*config).start1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/config.go:321 +0xa97
+  course/raft.make_config()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/config.go:100 +0x9f9
+  course/raft.TestInitialElectionPartA()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/test_test.go:26 +0x44
+  testing.tRunner()
+      /usr/local/go/src/testing/testing.go:1689 +0x21e
+  testing.(*T).Run.gowrap1()
+      /usr/local/go/src/testing/testing.go:1742 +0x44
+
+Goroutine 13 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+==================
+WARNING: DATA RACE
+Write at 0x00c00003a148 by goroutine 9:
+  course/raft.(*Raft).becomeCandidateLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:140 +0x339
+  course/raft.(*Raft).electionTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:509 +0x274
+  course/raft.Make.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x33
+
+Previous read at 0x00c00003a148 by goroutine 13:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:456 +0x14b
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 9 (running) created at:
+  course/raft.Make()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x224
+  course/raft.(*config).start1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/config.go:321 +0xa97
+  course/raft.make_config()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/config.go:100 +0x9f9
+  course/raft.TestInitialElectionPartA()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/test_test.go:26 +0x44
+  testing.tRunner()
+      /usr/local/go/src/testing/testing.go:1689 +0x21e
+  testing.(*T).Run.gowrap1()
+      /usr/local/go/src/testing/testing.go:1742 +0x44
+
+Goroutine 13 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+000555 T0001 LOG1 S2 candidate->Follower,For T1->2
+000555 T0001 LOG1 S1 candidate->Follower,For T1->2
+==================
+WARNING: DATA RACE
+Write at 0x00c00003a2b8 by goroutine 42:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:119 +0x1d3
+  course/raft.(*Raft).RequestVote()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:255 +0x1cb
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Previous read at 0x00c00003a2b8 by goroutine 27:
+  course/raft.(*Raft).contextLostLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:344 +0x175
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:461 +0x1e0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 42 (running) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+
+Goroutine 27 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+==================
+WARNING: DATA RACE
+Write at 0x00c00003a2c8 by goroutine 42:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:123 +0x24f
+  course/raft.(*Raft).RequestVote()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:255 +0x1cb
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Previous read at 0x00c00003a2c8 by goroutine 26:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:456 +0x14b
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 42 (running) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+
+Goroutine 26 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+000557 T0002 VOTE S2 ->S0 ,vote granted
+000558 T0002 VOTE S1 ->S0 ,vote granted
+000560 T0002 LEAD S0 Become Leader,in T2
+==================
+WARNING: DATA RACE
+Read at 0x00c00003a138 by goroutine 38:
+  course/raft.(*Raft).contextLostLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:344 +0x175
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:461 +0x1e0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c00003a138 by goroutine 39:
+  course/raft.(*Raft).becomeLeaderLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:158 +0x3ce
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:471 +0x287
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 38 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 39 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+000562 T0002 VOTE S0 Lost content s1,abort
+000564 T0002 LOG1 S2 follower->Follower,For T2->2
+000565 T0002 LOG1 S1 follower->Follower,For T2->2
+002574 T0002 LOG1 S1 follower->Follower,For T2->2
+002574 T0002 LOG1 S2 follower->Follower,For T2->2
+004575 T0002 LOG1 S2 follower->Follower,For T2->2
+004575 T0002 LOG1 S1 follower->Follower,For T2->2
+006584 T0002 LOG1 S2 follower->Follower,For T2->2
+006585 T0002 LOG1 S1 follower->Follower,For T2->2
+008595 T0002 LOG1 S1 follower->Follower,For T2->2
+008595 T0002 LOG1 S2 follower->Follower,For T2->2
+010608 T0002 LOG1 S2 follower->Follower,For T2->2
+010608 T0002 LOG1 S1 follower->Follower,For T2->2
+012607 T0002 LOG1 S1 follower->Follower,For T2->2
+012608 T0002 LOG1 S2 follower->Follower,For T2->2
+014609 T0002 LOG1 S1 follower->Follower,For T2->2
+014609 T0002 LOG1 S2 follower->Follower,For T2->2
+016618 T0002 LOG1 S2 follower->Follower,For T2->2
+016618 T0002 LOG1 S1 follower->Follower,For T2->2
+018619 T0002 LOG1 S1 follower->Follower,For T2->2
+018619 T0002 LOG1 S2 follower->Follower,For T2->2
+020631 T0002 LOG1 S2 follower->Follower,For T2->2
+020632 T0002 LOG1 S1 follower->Follower,For T2->2
+022639 T0002 LOG1 S1 follower->Follower,For T2->2
+022640 T0002 LOG1 S2 follower->Follower,For T2->2
+024641 T0002 LOG1 S2 follower->Follower,For T2->2
+024642 T0002 LOG1 S1 follower->Follower,For T2->2
+026652 T0002 LOG1 S1 follower->Follower,For T2->2
+026652 T0002 LOG1 S2 follower->Follower,For T2->2
+028654 T0002 LOG1 S2 follower->Follower,For T2->2
+028654 T0002 LOG1 S1 follower->Follower,For T2->2
+--- FAIL: TestInitialElectionPartA (3.05s)
+    testing.go:1398: race detected during execution of test
+030472 T0000 VOTE S0 follower->Candidate,For T1
+Test (PartA): election after network failure ...
+030474 T0000 VOTE S2 follower->Candidate,For T1
+030474 T0000 VOTE S1 follower->Candidate,For T1
+030477 T0001 VOTE S1 Reject vote from s0,For T1
+030477 T0001 VOTE S0 Reject vote from s2,For T1
+030477 T0001 VOTE S2 Reject vote from s0,For T1
+030477 T0001 VOTE S0 Reject vote from s1,For T1
+030479 T0001 VOTE S1 Reject vote from s2,For T1
+030479 T0001 VOTE S2 Reject vote from s1,For T1
+031153 T0001 VOTE S1 candidate->Candidate,For T2
+031158 T0001 LOG1 S0 candidate->Follower,For T1->2
+031160 T0002 VOTE S0 ->S1 ,vote granted
+031158 T0001 LOG1 S2 candidate->Follower,For T1->2
+031161 T0002 VOTE S2 ->S1 ,vote granted
+031163 T0002 LEAD S1 Become Leader,in T2
+031164 T0002 VOTE S1 Lost content s2,abort
+031167 T0002 LOG1 S0 follower->Follower,For T2->2
+031167 T0002 LOG1 S2 follower->Follower,For T2->2
+033169 T0002 LOG1 S2 follower->Follower,For T2->2
+033169 T0002 LOG1 S0 follower->Follower,For T2->2
+035173 T0002 LOG1 S0 follower->Follower,For T2->2
+035173 T0002 LOG1 S2 follower->Follower,For T2->2
+040534 T0002 VOTE S0 follower->Candidate,For T3
+040539 T0002 LOG1 S2 follower->Follower,For T2->3
+040539 T0003 VOTE S2 ->S0 ,vote granted
+040541 T0003 LEAD S0 Become Leader,in T3
+040544 T0003 LOG1 S2 follower->Follower,For T3->3
+041196 T0003 LOG2 S2 <-S1,Reject log,Higher term,T2<T3
+041196 T0003 LOG2 S0 <-S1,Reject log,Higher term,T2<T3
+042555 T0002 LOG1 S1 leader->Follower,For T2->3
+042555 T0003 LOG1 S2 follower->Follower,For T3->3
+043196 T0003 LOG1 S1 Lost Leader [2]to follower [T3]
+044564 T0003 LOG1 S1 follower->Follower,For T3->3
+044564 T0003 LOG1 S2 follower->Follower,For T3->3
+050439 T0003 VOTE S2 follower->Candidate,For T4
+050643 T0003 LOG1 S1 Replicate to s0,Lost or error
+051086 T0004 VOTE S2 candidate->Candidate,For T5
+051798 T0003 LOG1 S1 Replicate to s0,Lost or error
+051851 T0003 VOTE S1 follower->Candidate,For T4
+052886 T0004 VOTE S1 candidate->Candidate,For T5
+053068 T0005 VOTE S2 candidate->Candidate,For T6
+054654 T0003 LOG1 S0 Replicate to s2,Lost or error
+055295 T0005 VOTE S1 candidate->Candidate,For T6
+056140 T0006 VOTE S2 candidate->Candidate,For T7
+056664 T0007 VOTE S2 candidate->Candidate,For T8
+057207 T0006 VOTE S1 candidate->Candidate,For T7
+==================
+WARNING: DATA RACE
+Read at 0x00c0000d8cc8 by goroutine 280:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:452 +0x46d
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c0000d8cc8 by goroutine 142:
+  course/raft.(*Raft).becomeCandidateLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:140 +0x339
+  course/raft.(*Raft).electionTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:509 +0x274
+  course/raft.Make.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x33
+
+Goroutine 280 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 142 (running) created at:
+  course/raft.Make()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x224
+  course/raft.(*config).start1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/config.go:321 +0xa97
+  course/raft.make_config()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/config.go:100 +0x9f9
+  course/raft.TestReElectionPartA()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/test_test.go:57 +0x3c
+  testing.tRunner()
+      /usr/local/go/src/testing/testing.go:1689 +0x21e
+  testing.(*T).Run.gowrap1()
+      /usr/local/go/src/testing/testing.go:1742 +0x44
+==================
+057690 T0007 DBUG S1 Ask vote from s0,Lost or error
+059275 T0007 VOTE S1 candidate->Candidate,For T8
+059708 T0008 VOTE S2 candidate->Candidate,For T9
+059890 T0008 VOTE S1 candidate->Candidate,For T9
+061024 T0003 LOG1 S0 Replicate to s1,Lost or error
+061857 T0009 DBUG S1 Ask vote from s0,Lost or error
+062209 T0009 VOTE S1 candidate->Candidate,For T10
+062733 T0010 VOTE S1 candidate->Candidate,For T11
+063045 T0009 VOTE S2 candidate->Candidate,For T10
+064229 T0011 VOTE S1 candidate->Candidate,For T12
+065755 T0010 VOTE S2 candidate->Candidate,For T11
+065760 T0012 VOTE S1 Reject vote from s2,For T11
+065763 T0011 LOG1 S2 candidate->Follower,For T11->12
+066037 T0012 VOTE S1 candidate->Candidate,For T13
+==================
+WARNING: DATA RACE
+Read at 0x00c0000d8d48 by goroutine 368:
+  course/raft.(*Raft).RequestVote()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:245 +0xcf
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Previous write at 0x00c0000d8d48 by goroutine 359:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:123 +0x24f
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 368 (running) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+
+Goroutine 359 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c0000d8d38 by goroutine 368:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:118 +0x9d
+  course/raft.(*Raft).RequestVote()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:255 +0x1cb
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Previous write at 0x00c0000d8d38 by goroutine 359:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:119 +0x1d3
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 368 (running) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+
+Goroutine 359 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+066044 T0012 LOG1 S2 follower->Follower,For T12->13
+==================
+WARNING: DATA RACE
+Write at 0x00c0000d8d50 by goroutine 368:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:121 +0x232
+  course/raft.(*Raft).RequestVote()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:255 +0x1cb
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Previous write at 0x00c0000d8d50 by goroutine 359:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:121 +0x232
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 368 (running) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+
+Goroutine 359 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+066045 T0013 VOTE S2 ->S1 ,vote granted
+066046 T0013 LEAD S1 Become Leader,in T13
+066050 T0013 LOG1 S2 follower->Follower,For T13->13
+067067 T0013 DBUG S1 Ask vote from s0,Lost or error
+==================
+WARNING: DATA RACE
+Read at 0x00c0000d8d48 by goroutine 345:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:452 +0x46d
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c0000d8d48 by goroutine 373:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:123 +0x24f
+  course/raft.(*Raft).AppendEntries()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:371 +0x15d
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Goroutine 345 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 373 (finished) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+==================
+067974 T0013 DBUG S2 Ask vote from s1,Lost or error
+068059 T0013 LOG1 S2 follower->Follower,For T13->13
+070069 T0013 LOG1 S2 follower->Follower,For T13->13
+070601 T0003 LOG1 S0 Replicate to s2,Lost or error
+070667 T0013 LOG2 S2 <-S0,Reject log,Higher term,T3<T13
+070667 T0013 LOG2 S1 <-S0,Reject log,Higher term,T3<T13
+071452 T0013 DBUG S2 Ask vote from s1,Lost or error
+072071 T0013 LOG1 S2 follower->Follower,For T13->13
+072075 T0003 LOG1 S0 leader->Follower,For T3->13
+072670 T0013 LOG1 S0 Lost Leader [3]to follower [T13]
+074031 T0013 LOG1 S0 Replicate to s1,Lost or error
+074076 T0013 LOG1 S2 follower->Follower,For T13->13
+074076 T0013 LOG1 S0 follower->Follower,For T13->13
+074459 T0013 DBUG S2 Ask vote from s1,Lost or error
+--- FAIL: TestReElectionPartA (4.46s)
+    testing.go:1398: race detected during execution of test
+075107 T0000 VOTE S0 follower->Candidate,For T1
+075110 T0000 VOTE S2 follower->Candidate,For T1
+075111 T0000 VOTE S1 follower->Candidate,For T1
+075114 T0000 VOTE S3 follower->Candidate,For T1
+075114 T0000 VOTE S4 follower->Candidate,For T1
+075117 T0000 VOTE S6 follower->Candidate,For T1
+075118 T0000 VOTE S5 follower->Candidate,For T1
+Test (PartA): multiple elections ...
+075122 T0001 VOTE S6 Reject vote from s3,For T1
+075123 T0001 VOTE S2 Reject vote from s4,For T1
+075125 T0001 VOTE S1 Reject vote from s4,For T1
+075125 T0001 VOTE S4 Reject vote from s6,For T1
+075126 T0001 VOTE S0 Reject vote from s4,For T1
+075127 T0001 VOTE S5 Reject vote from s6,For T1
+075127 T0001 VOTE S4 Reject vote from s5,For T1
+075128 T0001 VOTE S5 Reject vote from s3,For T1
+075129 T0001 VOTE S1 Reject vote from s5,For T1
+075130 T0001 VOTE S0 Reject vote from s3,For T1
+075131 T0001 VOTE S4 Reject vote from s3,For T1
+075132 T0001 VOTE S3 Reject vote from s4,For T1
+075132 T0001 VOTE S6 Reject vote from s5,For T1
+075127 T0001 VOTE S2 Reject vote from s3,For T1
+075134 T0001 VOTE S0 Reject vote from s5,For T1
+075135 T0001 VOTE S5 Reject vote from s4,For T1
+075135 T0001 VOTE S2 Reject vote from s5,For T1
+075136 T0001 VOTE S2 Reject vote from s6,For T1
+075136 T0001 VOTE S3 Reject vote from s6,For T1
+075138 T0001 VOTE S0 Reject vote from s6,For T1
+075139 T0001 VOTE S1 Reject vote from s6,For T1
+075139 T0001 VOTE S6 Reject vote from s4,For T1
+075141 T0001 VOTE S3 Reject vote from s5,For T1
+075256 T0013 LOG1 S1 Replicate to s2,Lost or error
+075308 T0013 LOG1 S0 Replicate to s2,Lost or error
+075319 T0013 DBUG S2 Ask vote from s0,Lost or error
+075701 T0001 VOTE S5 candidate->Candidate,For T2
+075706 T0001 LOG1 S1 candidate->Follower,For T1->2
+075706 T0001 LOG1 S0 candidate->Follower,For T1->2
+075706 T0002 VOTE S1 ->S5 ,vote granted
+075707 T0002 VOTE S0 ->S5 ,vote granted
+075708 T0001 LOG1 S4 candidate->Follower,For T1->2
+075708 T0001 LOG1 S6 candidate->Follower,For T1->2
+075709 T0002 VOTE S4 ->S5 ,vote granted
+075710 T0002 VOTE S6 ->S5 ,vote granted
+==================
+WARNING: DATA RACE
+Read at 0x00c000442438 by goroutine 551:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:468 +0x214
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c000442438 by goroutine 552:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:468 +0x229
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 551 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 552 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+075706 T0001 LOG1 S3 candidate->Follower,For T1->2
+==================
+WARNING: DATA RACE
+Write at 0x00c000442438 by goroutine 551:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:468 +0x229
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c000442438 by goroutine 555:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:468 +0x229
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 551 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 555 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+075712 T0002 LEAD S5 Become Leader,in T2
+075714 T0002 VOTE S3 ->S5 ,vote granted
+075706 T0001 LOG1 S2 candidate->Follower,For T1->2
+075715 T0002 VOTE S2 ->S5 ,vote granted
+075716 T0002 VOTE S5 Lost content s6,abort
+075717 T0002 VOTE S5 Lost content s3,abort
+075717 T0002 LOG1 S3 follower->Follower,For T2->2
+075718 T0002 LOG1 S1 follower->Follower,For T2->2
+075718 T0002 LOG1 S6 follower->Follower,For T2->2
+075719 T0002 VOTE S5 Lost content s2,abort
+075719 T0002 LOG1 S2 follower->Follower,For T2->2
+075721 T0002 LOG1 S4 follower->Follower,For T2->2
+075721 T0002 LOG1 S0 follower->Follower,For T2->2
+076434 T0013 DBUG S1 Ask vote from s2,Lost or error
+077265 T0013 LOG1 S0 Replicate to s1,Lost or error
+077297 T0013 LOG1 S0 Replicate to s1,Lost or error
+077725 T0002 LOG1 S0 follower->Follower,For T2->2
+077726 T0002 LOG1 S6 follower->Follower,For T2->2
+077726 T0002 LOG1 S4 follower->Follower,For T2->2
+077727 T0002 LOG1 S1 follower->Follower,For T2->2
+077725 T0002 LOG1 S3 follower->Follower,For T2->2
+077729 T0002 LOG1 S2 follower->Follower,For T2->2
+079660 T0002 DBUG S0 Ask vote from s6,Lost or error
+079728 T0002 LOG1 S2 follower->Follower,For T2->2
+079729 T0002 LOG1 S6 follower->Follower,For T2->2
+079728 T0002 LOG1 S3 follower->Follower,For T2->2
+079728 T0002 LOG1 S1 follower->Follower,For T2->2
+079730 T0002 LOG1 S0 follower->Follower,For T2->2
+079730 T0002 LOG1 S4 follower->Follower,For T2->2
+079844 T0013 DBUG S2 Ask vote from s1,Lost or error
+079948 T0013 LOG1 S0 Replicate to s2,Lost or error
+080415 T0013 LOG1 S0 Replicate to s2,Lost or error
+081732 T0002 LOG1 S0 follower->Follower,For T2->2
+081733 T0002 LOG1 S1 follower->Follower,For T2->2
+081733 T0002 LOG1 S6 follower->Follower,For T2->2
+082971 T0013 LOG1 S0 Replicate to s1,Lost or error
+083043 T0002 VOTE S4 follower->Candidate,For T3
+083095 T0002 VOTE S2 follower->Candidate,For T3
+083733 T0002 LOG1 S0 follower->Follower,For T2->2
+083733 T0002 LOG1 S1 follower->Follower,For T2->2
+083733 T0002 LOG1 S6 follower->Follower,For T2->2
+084021 T0003 VOTE S2 candidate->Candidate,For T4
+084255 T0004 DBUG S2 Ask vote from s4,Lost or error
+084470 T0002 VOTE S3 follower->Candidate,For T3
+084572 T0003 DBUG S4 Ask vote from s0,Lost or error
+084918 T0004 DBUG S2 Ask vote from s6,Lost or error
+085161 T0013 LOG1 S0 Replicate to s2,Lost or error
+085202 T0004 DBUG S2 Ask vote from s5,Lost or error
+085626 T0003 DBUG S4 Ask vote from s5,Lost or error
+085728 T0003 VOTE S4 candidate->Candidate,For T4
+085733 T0004 VOTE S2 Reject vote from s4,For T4
+085734 T0002 LOG1 S1 follower->Follower,For T2->4
+085734 T0004 VOTE S1 ->S4 ,vote granted
+085735 T0002 LOG1 S5 leader->Follower,For T2->4
+085735 T0004 LOG2 S2 <-S5,Reject log,Higher term,T2<T4
+085733 T0003 LOG2 S3 <-S5,Reject log,Higher term,T2<T3
+085735 T0003 LOG1 S3 candidate->Follower,For T3->4
+085735 T0004 VOTE S3 ->S4 ,vote granted
+085736 T0004 LOG2 S1 <-S5,Reject log,Higher term,T2<T4
+085733 T0004 LOG2 S4 <-S5,Reject log,Higher term,T2<T4
+085735 T0004 VOTE S5 ->S4 ,vote granted
+085750 T0004 LEAD S4 Become Leader,in T4
+085753 T0004 LOG1 S5 follower->Follower,For T4->4
+085753 T0004 LOG1 S3 follower->Follower,For T4->4
+085755 T0004 LOG1 S1 follower->Follower,For T4->4
+085755 T0004 LOG1 S2 candidate->Follower,For T4->4
+086984 T0002 VOTE S6 follower->Candidate,For T3
+087076 T0013 LOG1 S0 Replicate to s1,Lost or error
+087198 T0004 DBUG S2 Ask vote from s5,Lost or error
+087470 T0002 VOTE S0 follower->Candidate,For T3
+087735 T0004 LOG1 S5 Lost Leader [2]to follower [T4]
+087761 T0004 LOG1 S1 follower->Follower,For T4->4
+087761 T0004 LOG1 S5 follower->Follower,For T4->4
+087761 T0004 LOG1 S2 follower->Follower,For T4->4
+087761 T0004 LOG1 S3 follower->Follower,For T4->4
+087779 T0004 DBUG S3 Ask vote from s6,Lost or error
+087800 T0013 DBUG S1 Ask vote from s2,Lost or error
+088052 T0003 VOTE S6 candidate->Candidate,For T4
+088215 T0013 DBUG S2 Ask vote from s1,Lost or error
+088337 T0013 LOG1 S0 Replicate to s2,Lost or error
+088439 T0013 DBUG S2 Ask vote from s0,Lost or error
+088834 T0013 DBUG S2 Ask vote from s1,Lost or error
+089296 T0003 VOTE S0 candidate->Candidate,For T4
+089572 T0004 VOTE S6 candidate->Candidate,For T5
+089769 T0004 LOG1 S3 follower->Follower,For T4->4
+089770 T0004 LOG1 S2 follower->Follower,For T4->4
+089770 T0004 LOG1 S1 follower->Follower,For T4->4
+089770 T0004 LOG1 S5 follower->Follower,For T4->4
+090248 T0005 VOTE S6 candidate->Candidate,For T6
+090645 T0004 DBUG S1 Ask vote from s5,Lost or error
+090677 T0004 DBUG S2 Ask vote from s1,Lost or error
+090708 T0004 VOTE S0 candidate->Candidate,For T5
+091275 T0013 LOG1 S0 Replicate to s1,Lost or error
+091397 T0005 DBUG S0 Ask vote from s5,Lost or error
+091408 T0013 DBUG S1 Ask vote from s2,Lost or error
+091644 T0006 VOTE S6 candidate->Candidate,For T7
+091779 T0004 LOG1 S1 follower->Follower,For T4->4
+091779 T0004 LOG1 S3 follower->Follower,For T4->4
+091780 T0004 LOG1 S5 follower->Follower,For T4->4
+091960 T0013 LOG1 S0 Replicate to s1,Lost or error
+092523 T0007 DBUG S6 Ask vote from s1,Lost or error
+093011 T0004 VOTE S2 follower->Candidate,For T5
+093213 T0005 VOTE S0 candidate->Candidate,For T6
+093426 T0007 DBUG S6 Ask vote from s1,Lost or error
+093578 T0013 LOG1 S0 Replicate to s1,Lost or error
+093783 T0004 LOG1 S1 follower->Follower,For T4->4
+093783 T0004 LOG1 S3 follower->Follower,For T4->4
+093783 T0004 LOG1 S5 follower->Follower,For T4->4
+093962 T0007 VOTE S6 candidate->Candidate,For T8
+094217 T0008 DBUG S6 Ask vote from s5,Lost or error
+094228 T0008 DBUG S6 Ask vote from s1,Lost or error
+094370 T0013 LOG1 S0 Replicate to s2,Lost or error
+095552 T0005 VOTE S2 candidate->Candidate,For T6
+095557 T0004 LOG1 S1 follower->Follower,For T4->6
+095557 T0004 LOG1 S4 leader->Follower,For T4->6
+095558 T0006 VOTE S1 ->S2 ,vote granted
+095558 T0004 LOG1 S3 follower->Follower,For T4->6
+095558 T0006 VOTE S4 ->S2 ,vote granted
+095558 T0006 VOTE S3 ->S2 ,vote granted
+095558 T0004 LOG1 S5 follower->Follower,For T4->6
+095558 T0006 VOTE S5 ->S2 ,vote granted
+095562 T0006 LEAD S2 Become Leader,in T6
+095564 T0006 ERRO S2 cant become Leader 
+095567 T0006 LOG1 S3 follower->Follower,For T6->6
+095567 T0006 LOG1 S4 follower->Follower,For T6->6
+095569 T0006 LOG1 S3 follower->Follower,For T6->6
+095569 T0006 LOG1 S4 follower->Follower,For T6->6
+095567 T0006 LOG1 S1 follower->Follower,For T6->6
+095567 T0006 LOG1 S5 follower->Follower,For T6->6
+095570 T0006 LOG1 S1 follower->Follower,For T6->6
+095571 T0006 LOG1 S5 follower->Follower,For T6->6
+095784 T0006 LOG1 S4 Lost Leader [4]to follower [T6]
+096197 T0006 VOTE S0 candidate->Candidate,For T7
+096489 T0006 DBUG S2 Ask vote from s3,Lost or error
+096664 T0006 DBUG S4 Ask vote from s3,Lost or error
+096686 T0013 DBUG S1 Ask vote from s0,Lost or error
+096819 T0008 VOTE S6 candidate->Candidate,For T9
+096860 T0013 DBUG S1 Ask vote from s2,Lost or error
+097476 T0007 DBUG S0 Ask vote from s5,Lost or error
+097572 T0006 LOG1 S4 follower->Follower,For T6->6
+097572 T0006 LOG1 S5 follower->Follower,For T6->6
+097573 T0006 LOG1 S5 follower->Follower,For T6->6
+097572 T0006 LOG1 S1 follower->Follower,For T6->6
+097574 T0006 LOG1 S1 follower->Follower,For T6->6
+097574 T0006 LOG1 S3 follower->Follower,For T6->6
+097576 T0006 LOG1 S4 follower->Follower,For T6->6
+097577 T0006 LOG1 S3 follower->Follower,For T6->6
+097948 T0006 DBUG S2 Ask vote from s1,Lost or error
+098153 T0006 DBUG S4 Ask vote from s6,Lost or error
+098991 T0007 VOTE S0 candidate->Candidate,For T8
+099245 T0013 DBUG S1 Ask vote from s0,Lost or error
+099298 T0009 DBUG S6 Ask vote from s3,Lost or error
+099571 T0009 VOTE S6 candidate->Candidate,For T10
+099577 T0006 LOG1 S4 follower->Follower,For T6->6
+099578 T0006 LOG1 S1 follower->Follower,For T6->6
+099579 T0006 LOG1 S1 follower->Follower,For T6->6
+099580 T0006 LOG1 S5 follower->Follower,For T6->6
+099581 T0006 LOG1 S4 follower->Follower,For T6->6
+099581 T0006 LOG1 S5 follower->Follower,For T6->6
+099704 T0013 LOG1 S0 Replicate to s2,Lost or error
+100330 T0010 DBUG S6 Ask vote from s4,Lost or error
+100532 T0013 DBUG S1 Ask vote from s2,Lost or error
+100769 T0010 DBUG S6 Ask vote from s5,Lost or error
+100881 T0008 VOTE S0 candidate->Candidate,For T9
+101456 T0006 VOTE S3 follower->Candidate,For T7
+101583 T0006 LOG1 S4 follower->Follower,For T6->6
+101584 T0006 LOG1 S5 follower->Follower,For T6->6
+101584 T0006 LOG1 S1 follower->Follower,For T6->6
+101585 T0006 LOG1 S1 follower->Follower,For T6->6
+101586 T0006 LOG1 S5 follower->Follower,For T6->6
+101588 T0006 LOG1 S4 follower->Follower,For T6->6
+101750 T0006 DBUG S2 Ask vote from s4,Lost or error
+101842 T0010 DBUG S6 Ask vote from s2,Lost or error
+102064 T0010 DBUG S6 Ask vote from s3,Lost or error
+102216 T0009 VOTE S0 candidate->Candidate,For T10
+102268 T0013 LOG1 S1 Replicate to s2,Lost or error
+102279 T0013 DBUG S2 Ask vote from s0,Lost or error
+102341 T0010 DBUG S6 Ask vote from s2,Lost or error
+102797 T0006 DBUG S2 Ask vote from s1,Lost or error
+102868 T0010 VOTE S6 candidate->Candidate,For T11
+103363 T0013 DBUG S2 Ask vote from s1,Lost or error
+103414 T0006 LOG1 S2 Replicate to s0,Lost or error
+103446 T0011 DBUG S6 Ask vote from s4,Lost or error
+103583 T0006 LOG1 S5 follower->Follower,For T6->6
+103583 T0006 LOG1 S4 follower->Follower,For T6->6
+103583 T0006 LOG1 S1 follower->Follower,For T6->6
+103589 T0006 LOG1 S1 follower->Follower,For T6->6
+103590 T0006 LOG1 S4 follower->Follower,For T6->6
+103590 T0006 LOG1 S5 follower->Follower,For T6->6
+103773 T0010 VOTE S0 candidate->Candidate,For T11
+103886 T0006 LOG1 S2 Replicate to s3,Lost or error
+104079 T0006 DBUG S2 Ask vote from s3,Lost or error
+104284 T0007 VOTE S3 candidate->Candidate,For T8
+104289 T0011 VOTE S6 Reject vote from s3,For T8
+104289 T0006 LOG1 S2 leader->Follower,For T6->8
+104289 T0008 VOTE S2 ->S3 ,vote granted
+104289 T0011 VOTE S0 Reject vote from s3,For T8
+104290 T0006 LOG1 S1 follower->Follower,For T6->8
+104290 T0008 VOTE S1 ->S3 ,vote granted
+104291 T0008 LOG1 S3 candidate->Follower,For T8->11
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f438 by goroutine 1320:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:119 +0x1d3
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous read at 0x00c00023f438 by goroutine 1317:
+  course/raft.(*Raft).contextLostLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:344 +0x175
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:461 +0x1e0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 1320 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 1317 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+104292 T0008 VOTE S3 Lost content s1,abort
+104292 T0008 LOG1 S3 follower->Follower,For T8->11
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f448 by goroutine 1320:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:123 +0x24f
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous read at 0x00c00023f448 by goroutine 1317:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:456 +0x14b
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 1320 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 1317 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f450 by goroutine 1315:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:121 +0x232
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c00023f450 by goroutine 1320:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:121 +0x232
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 1315 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 1320 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+104295 T0011 DBUG S6 Ask vote from s3,Lost or error
+104427 T0013 LOG1 S0 Replicate to s2,Lost or error
+104450 T0011 DBUG S0 Ask vote from s5,Lost or error
+104582 T0011 DBUG S0 Ask vote from s5,Lost or error
+104807 T0008 LOG1 S2 Replicate to s0,Lost or error
+104990 T0008 LOG1 S2 Replicate to s3,Lost or error
+105062 T0011 VOTE S6 candidate->Candidate,For T12
+105066 T0011 LOG1 S0 candidate->Follower,For T11->12
+105067 T0012 VOTE S0 ->S6 ,vote granted
+105067 T0008 LOG1 S1 follower->Follower,For T8->12
+105067 T0012 VOTE S1 ->S6 ,vote granted
+105066 T0008 LOG1 S2 follower->Follower,For T8->12
+105067 T0012 VOTE S2 ->S6 ,vote granted
+105068 T0011 LOG1 S3 follower->Follower,For T11->12
+105068 T0012 VOTE S3 ->S6 ,vote granted
+==================
+WARNING: DATA RACE
+Read at 0x00c00034b2a8 by goroutine 1338:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:468 +0x214
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c00034b2a8 by goroutine 1337:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:491 +0x3d2
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 1338 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 1337 (finished) created at:
+  course/raft.(*Raft).electionTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x31c
+  course/raft.Make.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:551 +0x33
+==================
+105070 T0012 LEAD S6 Become Leader,in T12
+==================
+WARNING: DATA RACE
+Read at 0x00c00034b2a8 by goroutine 1341:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:470 +0x264
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c00034b2a8 by goroutine 1340:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:468 +0x229
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 1341 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 1340 (finished) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+105074 T0012 ERRO S6 cant become Leader 
+105076 T0012 LOG1 S0 follower->Follower,For T12->12
+105076 T0012 LOG1 S2 follower->Follower,For T12->12
+105077 T0012 LOG1 S3 follower->Follower,For T12->12
+105078 T0012 LOG1 S1 follower->Follower,For T12->12
+105079 T0012 LOG1 S3 follower->Follower,For T12->12
+105080 T0012 LOG1 S2 follower->Follower,For T12->12
+105080 T0012 LOG1 S0 follower->Follower,For T12->12
+105081 T0012 LOG1 S1 follower->Follower,For T12->12
+105349 T0012 DBUG S0 Ask vote from s1,Lost or error
+105571 T0013 DBUG S2 Ask vote from s0,Lost or error
+105582 T0012 LOG1 S2 Lost Leader [6]to follower [T12]
+105583 T0012 LOG1 S2 Lost Leader [6]to follower [T12]
+105795 T0013 DBUG S1 Ask vote from s0,Lost or error
+107002 T0013 LOG1 S0 Replicate to s1,Lost or error
+107024 T0013 DBUG S2 Ask vote from s0,Lost or error
+107086 T0012 DBUG S0 Ask vote from s4,Lost or error
+107089 T0012 LOG1 S2 follower->Follower,For T12->12
+107089 T0012 LOG1 S0 follower->Follower,For T12->12
+107089 T0012 LOG1 S3 follower->Follower,For T12->12
+107091 T0012 LOG1 S0 follower->Follower,For T12->12
+107091 T0012 LOG1 S1 follower->Follower,For T12->12
+107092 T0012 LOG1 S1 follower->Follower,For T12->12
+107094 T0012 LOG1 S3 follower->Follower,For T12->12
+107094 T0012 LOG1 S2 follower->Follower,For T12->12
+107126 T0013 LOG1 S0 Replicate to s2,Lost or error
+107199 T0012 DBUG S1 Ask vote from s3,Lost or error
+107210 T0012 DBUG S6 Ask vote from s1,Lost or error
+107210 T0012 DBUG S6 Ask vote from s0,Lost or error
+107252 T0006 VOTE S5 follower->Candidate,For T7
+107799 T0012 LOG1 S2 Replicate to s0,Lost or error
+107972 T0006 VOTE S4 follower->Candidate,For T7
+108024 T0012 LOG1 S2 Replicate to s3,Lost or error
+108086 T0012 LOG1 S6 Replicate to s5,Lost or error
+108149 T0013 DBUG S1 Ask vote from s2,Lost or error
+108631 T0012 DBUG S6 Ask vote from s4,Lost or error
+108683 T0012 LOG1 S2 Replicate to s0,Lost or error
+108755 T0013 DBUG S2 Ask vote from s0,Lost or error
+108877 T0013 DBUG S1 Ask vote from s2,Lost or error
+108960 T0012 DBUG S6 Ask vote from s3,Lost or error
+109098 T0012 LOG1 S1 follower->Follower,For T12->12
+109099 T0012 LOG1 S2 follower->Follower,For T12->12
+109100 T0012 LOG1 S2 follower->Follower,For T12->12
+109098 T0007 LOG1 S4 candidate->Follower,For T7->12
+109101 T0007 LOG1 S5 candidate->Follower,For T7->12
+109103 T0012 LOG1 S4 follower->Follower,For T12->12
+109103 T0012 LOG1 S5 follower->Follower,For T12->12
+109105 T0012 LOG1 S1 follower->Follower,For T12->12
+109248 T0012 LOG1 S4 Replicate to s0,Lost or error
+109802 T0013 LOG1 S0 Replicate to s1,Lost or error
+109935 T0012 DBUG S4 Ask vote from s0,Lost or error
+109977 T0013 DBUG S0 Ask vote from s1,Lost or error
+110039 T0012 LOG1 S2 Replicate to s6,Lost or error
+110345 T0012 LOG1 S4 Replicate to s0,Lost or error
+110579 T0012 DBUG S0 Ask vote from s5,Lost or error
+110590 T0012 VOTE S0 follower->Candidate,For T13
+110612 T0012 DBUG S2 Ask vote from s0,Lost or error
+110757 T0013 DBUG S0 Ask vote from s1,Lost or error
+111028 T0012 VOTE S3 follower->Candidate,For T13
+111104 T0012 LOG1 S4 follower->Follower,For T12->12
+111104 T0012 LOG1 S5 follower->Follower,For T12->12
+111106 T0012 LOG1 S4 follower->Follower,For T12->12
+111106 T0012 LOG1 S1 follower->Follower,For T12->12
+111104 T0012 LOG1 S2 follower->Follower,For T12->12
+111107 T0012 LOG1 S1 follower->Follower,For T12->12
+111107 T0012 LOG1 S5 follower->Follower,For T12->12
+111109 T0012 LOG1 S2 follower->Follower,For T12->12
+111784 T0013 VOTE S3 candidate->Candidate,For T14
+111979 T0013 DBUG S0 Ask vote from s3,Lost or error
+112112 T0014 DBUG S3 Ask vote from s5,Lost or error
+112578 T0013 DBUG S0 Ask vote from s6,Lost or error
+112589 T0012 LOG1 S5 Replicate to s2,Lost or error
+112651 T0012 LOG1 S5 Replicate to s3,Lost or error
+112963 T0014 DBUG S3 Ask vote from s2,Lost or error
+113025 T0012 DBUG S6 Ask vote from s4,Lost or error
+113107 T0012 DBUG S6 Ask vote from s5,Lost or error
+113111 T0012 LOG1 S2 follower->Follower,For T12->12
+113111 T0012 LOG1 S4 follower->Follower,For T12->12
+113111 T0012 LOG1 S5 follower->Follower,For T12->12
+113112 T0012 LOG1 S4 follower->Follower,For T12->12
+113113 T0012 LOG1 S1 follower->Follower,For T12->12
+113114 T0012 LOG1 S5 follower->Follower,For T12->12
+113114 T0012 LOG1 S2 follower->Follower,For T12->12
+113114 T0012 LOG1 S1 follower->Follower,For T12->12
+113115 T0013 LOG1 S0 Replicate to s1,Lost or error
+113168 T0013 LOG1 S0 Replicate to s2,Lost or error
+113191 T0013 DBUG S0 Ask vote from s6,Lost or error
+113222 T0012 DBUG S5 Ask vote from s6,Lost or error
+113387 T0012 DBUG S2 Ask vote from s6,Lost or error
+113541 T0012 LOG1 S6 Replicate to s4,Lost or error
+113825 T0013 VOTE S0 candidate->Candidate,For T14
+113836 T0012 LOG1 S2 Replicate to s0,Lost or error
+114223 T0013 LOG1 S1 Replicate to s0,Lost or error
+114336 T0014 VOTE S0 candidate->Candidate,For T15
+114740 T0014 VOTE S3 candidate->Candidate,For T15
+115117 T0012 LOG1 S1 follower->Follower,For T12->12
+115117 T0012 LOG1 S5 follower->Follower,For T12->12
+115118 T0012 LOG1 S1 follower->Follower,For T12->12
+115118 T0012 LOG1 S2 follower->Follower,For T12->12
+115118 T0012 LOG1 S5 follower->Follower,For T12->12
+115119 T0012 LOG1 S2 follower->Follower,For T12->12
+115720 T0012 DBUG S6 Ask vote from s3,Lost or error
+116034 T0012 LOG1 S2 Replicate to s6,Lost or error
+116056 T0013 DBUG S2 Ask vote from s0,Lost or error
+116190 T0015 VOTE S0 candidate->Candidate,For T16
+116364 T0015 DBUG S3 Ask vote from s4,Lost or error
+116408 T0012 DBUG S6 Ask vote from s0,Lost or error
+116892 T0012 LOG1 S6 Replicate to s0,Lost or error
+117118 T0012 LOG1 S1 follower->Follower,For T12->12
+117118 T0012 LOG1 S2 follower->Follower,For T12->12
+117118 T0012 LOG1 S5 follower->Follower,For T12->12
+117120 T0012 LOG1 S5 follower->Follower,For T12->12
+117120 T0012 LOG1 S1 follower->Follower,For T12->12
+117122 T0012 LOG1 S2 follower->Follower,For T12->12
+117452 T0015 VOTE S3 candidate->Candidate,For T16
+117654 T0016 DBUG S0 Ask vote from s1,Lost or error
+117676 T0012 DBUG S6 Ask vote from s5,Lost or error
+117697 T0016 DBUG S0 Ask vote from s3,Lost or error
+117809 T0012 LOG1 S6 Replicate to s0,Lost or error
+117831 T0012 LOG1 S2 Replicate to s6,Lost or error
+117883 T0016 DBUG S3 Ask vote from s0,Lost or error
+118060 T0012 LOG1 S5 Replicate to s3,Lost or error
+118060 T0012 DBUG S6 Ask vote from s1,Lost or error
+118214 T0012 DBUG S2 Ask vote from s3,Lost or error
+118215 T0016 DBUG S3 Ask vote from s4,Lost or error
+118347 T0016 DBUG S0 Ask vote from s6,Lost or error
+118419 T0016 VOTE S3 candidate->Candidate,For T17
+118441 T0012 VOTE S4 follower->Candidate,For T13
+118514 T0016 VOTE S0 candidate->Candidate,For T17
+118577 T0013 DBUG S4 Ask vote from s2,Lost or error
+118730 T0017 DBUG S0 Ask vote from s2,Lost or error
+119126 T0012 LOG1 S2 follower->Follower,For T12->12
+119126 T0012 LOG1 S5 follower->Follower,For T12->12
+119128 T0012 LOG1 S2 follower->Follower,For T12->12
+119126 T0012 LOG1 S1 follower->Follower,For T12->12
+119129 T0012 LOG1 S5 follower->Follower,For T12->12
+119129 T0012 LOG1 S1 follower->Follower,For T12->12
+119189 T0017 DBUG S0 Ask vote from s4,Lost or error
+119383 T0013 DBUG S1 Ask vote from s0,Lost or error
+119535 T0013 VOTE S4 candidate->Candidate,For T14
+119859 T0012 LOG1 S6 Replicate to s4,Lost or error
+119991 T0017 DBUG S3 Ask vote from s4,Lost or error
+119992 T0014 LOG1 S4 Replicate to s6,Lost or error
+120023 T0012 DBUG S6 Ask vote from s2,Lost or error
+120158 T0017 DBUG S0 Ask vote from s5,Lost or error
+120199 T0012 LOG1 S6 Replicate to s5,Lost or error
+120302 T0012 LOG1 S6 Replicate to s3,Lost or error
+120324 T0017 DBUG S0 Ask vote from s6,Lost or error
+120427 T0013 DBUG S1 Ask vote from s0,Lost or error
+120499 T0017 DBUG S0 Ask vote from s5,Lost or error
+120521 T0012 DBUG S6 Ask vote from s4,Lost or error
+120542 T0017 DBUG S0 Ask vote from s2,Lost or error
+120664 T0012 LOG1 S2 Replicate to s3,Lost or error
+120906 T0017 DBUG S0 Ask vote from s2,Lost or error
+120958 T0017 DBUG S0 Ask vote from s2,Lost or error
+121000 T0014 VOTE S4 candidate->Candidate,For T15
+121083 T0013 DBUG S1 Ask vote from s2,Lost or error
+121094 T0012 DBUG S6 Ask vote from s5,Lost or error
+121129 T0012 LOG1 S1 follower->Follower,For T12->12
+121129 T0012 LOG1 S5 follower->Follower,For T12->12
+121129 T0012 LOG1 S2 follower->Follower,For T12->12
+121130 T0012 LOG1 S1 follower->Follower,For T12->12
+121130 T0012 LOG1 S2 follower->Follower,For T12->12
+121131 T0012 LOG1 S5 follower->Follower,For T12->12
+121318 T0017 DBUG S3 Ask vote from s6,Lost or error
+121350 T0017 VOTE S0 candidate->Candidate,For T18
+121563 T0018 DBUG S0 Ask vote from s1,Lost or error
+121645 T0013 DBUG S1 Ask vote from s0,Lost or error
+121697 T0017 VOTE S3 candidate->Candidate,For T18
+121697 T0018 DBUG S0 Ask vote from s6,Lost or error
+121992 T0018 DBUG S0 Ask vote from s2,Lost or error
+122064 T0018 VOTE S0 candidate->Candidate,For T19
+122199 T0012 LOG1 S6 Replicate to s0,Lost or error
+122571 T0012 DBUG S6 Ask vote from s4,Lost or error
+122746 T0012 LOG1 S5 Replicate to s4,Lost or error
+122797 T0019 VOTE S0 candidate->Candidate,For T20
+123009 T0013 DBUG S2 Ask vote from s0,Lost or error
+123051 T0012 LOG1 S2 Replicate to s6,Lost or error
+123138 T0012 LOG1 S2 follower->Follower,For T12->12
+123138 T0012 LOG1 S5 follower->Follower,For T12->12
+123138 T0012 LOG1 S1 follower->Follower,For T12->12
+123141 T0012 LOG1 S2 follower->Follower,For T12->12
+123141 T0012 LOG1 S5 follower->Follower,For T12->12
+123144 T0012 LOG1 S1 follower->Follower,For T12->12
+123166 T0015 VOTE S4 candidate->Candidate,For T16
+123539 T0012 DBUG S6 Ask vote from s1,Lost or error
+123654 T0018 DBUG S3 Ask vote from s0,Lost or error
+123675 T0012 DBUG S6 Ask vote from s5,Lost or error
+123748 T0012 DBUG S2 Ask vote from s6,Lost or error
+124234 T0018 DBUG S3 Ask vote from s2,Lost or error
+124234 T0013 DBUG S1 Ask vote from s2,Lost or error
+124316 T0012 DBUG S6 Ask vote from s0,Lost or error
+124359 T0020 DBUG S0 Ask vote from s3,Lost or error
+124381 T0018 VOTE S3 candidate->Candidate,For T19
+124386 T0012 LOG1 S5 follower->Follower,For T12->19
+124386 T0019 VOTE S5 ->S3 ,vote granted
+124386 T0016 LOG1 S4 candidate->Follower,For T16->19
+124387 T0019 VOTE S4 ->S3 ,vote granted
+124387 T0012 LOG1 S2 follower->Follower,For T12->19
+124388 T0019 VOTE S2 ->S3 ,vote granted
+124386 T0020 VOTE S0 Reject vote from s3,For T19
+124386 T0012 LOG1 S6 leader->Follower,For T12->19
+124389 T0019 VOTE S6 ->S3 ,vote granted
+124390 T0012 LOG1 S1 follower->Follower,For T12->19
+124391 T0019 VOTE S1 ->S3 ,vote granted
+124392 T0019 LEAD S3 Become Leader,in T19
+124392 T0019 VOTE S3 Lost content s1,abort
+124392 T0019 LOG1 S3 leader->Follower,For T19->20
+124393 T0019 VOTE S3 Lost content s6,abort
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f438 by goroutine 2027:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:119 +0x1d3
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous read at 0x00c00023f438 by goroutine 2045:
+  course/raft.(*Raft).contextLostLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:344 +0x138
+  course/raft.(*Raft).startReplication()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:407 +0x1c0
+  course/raft.(*Raft).replicationTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:431 +0x58
+  course/raft.(*Raft).startElection.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:473 +0x44
+
+Goroutine 2027 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 2045 (running) created at:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:473 +0x30a
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+==================
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f448 by goroutine 2027:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:123 +0x24f
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:457 +0x3f0
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous read at 0x00c00023f448 by goroutine 2045:
+  course/raft.(*Raft).startReplication()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:419 +0x424
+  course/raft.(*Raft).replicationTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:431 +0x58
+  course/raft.(*Raft).startElection.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:473 +0x44
+
+Goroutine 2027 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 2045 (running) created at:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:473 +0x30a
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+==================
+124397 T0019 LOG1 S1 follower->Follower,For T19->19
+124397 T0020 LOG2 S0 <-S3,Reject log,Higher term,T19<T20
+124398 T0019 LOG1 S4 follower->Follower,For T19->19
+124400 T0019 LOG1 S6 follower->Follower,For T19->20
+124401 T0019 LOG1 S5 follower->Follower,For T19->20
+124403 T0019 LOG1 S2 follower->Follower,For T19->19
+==================
+WARNING: DATA RACE
+Read at 0x00c00023f4c8 by goroutine 1445:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:452 +0x46d
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous write at 0x00c00023f4c8 by goroutine 2039:
+  course/raft.(*Raft).becomeFollowerLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:123 +0x24f
+  course/raft.(*Raft).RequestVote()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:255 +0x1cb
+  runtime.call32()
+      /usr/local/go/src/runtime/asm_amd64.s:771 +0x42
+  reflect.Value.Call()
+      /usr/local/go/src/reflect/value.go:380 +0xb5
+  course/labrpc.(*Service).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:496 +0x524
+  course/labrpc.(*Server).dispatch()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:420 +0x24e
+  course/labrpc.(*Network).processReq.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:242 +0x9c
+
+Goroutine 1445 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 2039 (finished) created at:
+  course/labrpc.(*Network).processReq()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:241 +0x28a
+  course/labrpc.MakeNetwork.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/labrpc/labrpc.go:159 +0x9c
+==================
+124596 T0019 DBUG S4 Ask vote from s0,Lost or error
+124597 T0020 DBUG S0 Ask vote from s5,Lost or error
+124858 T0020 DBUG S0 Ask vote from s6,Lost or error
+124910 T0020 DBUG S5 Ask vote from s4,Lost or error
+124932 T0020 DBUG S0 Ask vote from s1,Lost or error
+124932 T0020 DBUG S0 Ask vote from s1,Lost or error
+125136 T0020 LOG1 S6 Lost Leader [12]to follower [T20]
+125137 T0020 LOG1 S6 Lost Leader [12]to follower [T20]
+125137 T0019 LOG1 S2 Replicate to s6,Lost or error
+125169 T0020 DBUG S6 Ask vote from s2,Lost or error
+125242 T0020 DBUG S0 Ask vote from s5,Lost or error
+125294 T0020 DBUG S0 Ask vote from s3,Lost or error
+125663 T0019 LOG1 S4 Replicate to s2,Lost or error
+125755 T0020 VOTE S0 candidate->Candidate,For T21
+125759 T0019 LOG1 S1 follower->Follower,For T19->21
+125759 T0019 LOG1 S4 follower->Follower,For T19->21
+125759 T0021 VOTE S1 ->S0 ,vote granted
+125759 T0021 VOTE S4 ->S0 ,vote granted
+125759 T0020 LOG1 S6 follower->Follower,For T20->21
+125760 T0021 VOTE S6 ->S0 ,vote granted
+125759 T0019 LOG1 S2 follower->Follower,For T19->21
+125760 T0021 VOTE S2 ->S0 ,vote granted
+125761 T0020 LOG1 S5 follower->Follower,For T20->21
+125761 T0021 VOTE S5 ->S0 ,vote granted
+125762 T0020 LOG1 S3 follower->Follower,For T20->21
+125764 T0021 VOTE S3 ->S0 ,vote granted
+125764 T0021 LEAD S0 Become Leader,in T21
+125764 T0021 LEAD S0 Become Leader,in T21
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f2b8 by goroutine 2079:
+  course/raft.(*Raft).becomeLeaderLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:158 +0x3ce
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:471 +0x287
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous read at 0x00c00023f2b8 by goroutine 2081:
+  course/raft.(*Raft).becomeLeaderLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:149 +0x49
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:471 +0x287
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Goroutine 2079 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 2081 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+==================
+125765 T0021 LEAD S0 Become Leader,in T21
+==================
+WARNING: DATA RACE
+Write at 0x00c00023f2b8 by goroutine 2081:
+  course/raft.(*Raft).becomeLeaderLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:158 +0x3ce
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:471 +0x287
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+
+Previous read at 0x00c00023f2b8 by goroutine 2094:
+  course/raft.(*Raft).contextLostLocked()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:344 +0x138
+  course/raft.(*Raft).startReplication()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:407 +0x1c0
+  course/raft.(*Raft).replicationTicker()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:431 +0x58
+  course/raft.(*Raft).startElection.func1.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:473 +0x44
+
+Goroutine 2081 (running) created at:
+  course/raft.(*Raft).startElection()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x56a
+  course/raft.(*Raft).electionTicker.gowrap1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:512 +0x44
+
+Goroutine 2094 (running) created at:
+  course/raft.(*Raft).startElection.func1()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:473 +0x30a
+  course/raft.(*Raft).startElection.gowrap2()
+      /mnt/c/Users/weijia/Downloads/kurumi/kurumi/kv操作系统/kv资料/repo/raft-course-main/src/raft/raft.go:496 +0x4f
+==================
+125769 T0021 VOTE S0 Lost content s3,abort
+125770 T0021 LOG1 S4 follower->Follower,For T21->21
+125771 T0021 LOG1 S2 follower->Follower,For T21->21
+125773 T0021 LOG1 S5 follower->Follower,For T21->21
+125773 T0021 LOG1 S1 follower->Follower,For T21->21
+125774 T0021 LOG1 S3 follower->Follower,For T21->21
+125776 T0021 LOG1 S6 follower->Follower,For T21->21
+125776 T0021 LOG1 S1 follower->Follower,For T21->21
+125776 T0021 LOG1 S4 follower->Follower,For T21->21
+125776 T0021 LOG1 S1 follower->Follower,For T21->21
+125778 T0021 LOG1 S3 follower->Follower,For T21->21
+125776 T0021 LOG1 S5 follower->Follower,For T21->21
+125774 T0021 LOG1 S2 follower->Follower,For T21->21
+125779 T0021 LOG1 S6 follower->Follower,For T21->21
+125780 T0021 LOG1 S2 follower->Follower,For T21->21
+125781 T0021 LOG1 S3 follower->Follower,For T21->21
+125782 T0021 LOG1 S4 follower->Follower,For T21->21
+125782 T0021 LOG1 S6 follower->Follower,For T21->21
+125783 T0021 LOG1 S5 follower->Follower,For T21->21
+125887 T0021 LOG1 S6 Replicate to s3,Lost or error
+125898 T0021 DBUG S0 Ask vote from s1,Lost or error
+126043 T0021 LOG1 S6 Replicate to s4,Lost or error
+126256 T0021 DBUG S6 Ask vote from s5,Lost or error
+126348 T0013 LOG1 S0 Replicate to s1,Lost or error
+126370 T0021 DBUG S4 Ask vote from s6,Lost or error
+126402 T0021 LOG1 S3 Lost Leader [19]to follower [T21]
+126554 T0021 LOG1 S5 Replicate to s2,Lost or error
+126677 T0021 DBUG S0 Ask vote from s2,Lost or error
+126805 T0021 DBUG S0 Ask vote from s5,Lost or error
+126838 T0021 DBUG S0 Ask vote from s3,Lost or error
+126838 T0021 DBUG S3 Ask vote from s6,Lost or error
+127100 T0021 LOG1 S6 Replicate to s0,Lost or error
+127274 T0021 DBUG S0 Ask vote from s1,Lost or error
+127586 T0021 LOG1 S6 Replicate to s3,Lost or error
+127728 T0021 DBUG S0 Ask vote from s5,Lost or error
+127739 T0021 DBUG S3 Ask vote from s5,Lost or error
+127750 T0021 LOG1 S6 Replicate to s0,Lost or error
+127775 T0021 LOG1 S4 follower->Follower,For T21->21
+127776 T0021 LOG1 S1 follower->Follower,For T21->21
+127776 T0021 LOG1 S4 follower->Follower,For T21->21
+127776 T0021 LOG1 S5 follower->Follower,For T21->21
+127777 T0021 LOG1 S1 follower->Follower,For T21->21
+127778 T0021 LOG1 S3 follower->Follower,For T21->21
+127779 T0021 LOG1 S3 follower->Follower,For T21->21
+127780 T0021 LOG1 S2 follower->Follower,For T21->21
+127781 T0021 LOG1 S2 follower->Follower,For T21->21
+127781 T0021 LOG1 S6 follower->Follower,For T21->21
+127781 T0021 LOG1 S5 follower->Follower,For T21->21
+127782 T0021 LOG1 S2 follower->Follower,For T21->21
+127782 T0021 LOG1 S6 follower->Follower,For T21->21
+127784 T0021 LOG1 S5 follower->Follower,For T21->21
+127784 T0021 LOG1 S1 follower->Follower,For T21->21
+127785 T0021 LOG1 S3 follower->Follower,For T21->21
+127786 T0021 LOG1 S4 follower->Follower,For T21->21
+127786 T0021 LOG1 S6 follower->Follower,For T21->21
+128464 T0021 DBUG S4 Ask vote from s0,Lost or error
+128667 T0021 DBUG S0 Ask vote from s2,Lost or error
+128790 T0021 DBUG S0 Ask vote from s4,Lost or error
+--- FAIL: TestManyElectionsPartA (5.41s)
+    testing.go:1398: race detected during execution of test
+FAIL
+exit status 1
+FAIL	course/raft	12.926s
