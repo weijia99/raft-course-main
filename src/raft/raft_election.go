@@ -20,6 +20,21 @@ func (rf *Raft) isElectionTimeOutLocked() bool {
 	return time.Since(rf.electionStart) > rf.electionTimeOut
 }
 
+// 比较最后一个日志是否大于候选人的最后一个日志
+func (rf *Raft) isMoreUpToDateLocked(candidateIndex, candidateTerm int) bool {
+	l := len(rf.log)
+	lastIndex, lastTerm := l-1, rf.log[l-1].Term
+	LOG(rf.me, rf.currentTerm, DVote, "Compare last log, Me: [%d]T%d, Candidate: [%d]T%d", lastIndex, lastTerm, candidateIndex, candidateTerm)
+	// term不相等
+	if lastTerm != candidateTerm {
+		return lastTerm > candidateTerm
+	}
+	// 相等就是比较log的长度，长度越长说明记录的东西
+	// 越多，越新
+	return lastIndex > candidateIndex
+
+}
+
 // example RequestVote RPC arguments structure.
 // field names must start with capital letters!
 type RequestVoteArgs struct {
@@ -27,6 +42,9 @@ type RequestVoteArgs struct {
 	// term & candidate index
 	Term        int
 	CandidateID int //who call this rpc
+	// log index & term
+	LastLogIndex int
+	LastLogTerm  int
 }
 
 // example RequestVote RPC reply structure.
@@ -61,6 +79,11 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		LOG(rf.me, rf.currentTerm, DVote, "<- S%d, Reject voted, Already voted to S%d", args.CandidateID, rf.votedFor)
 		return
 
+	}
+	// if the candidate's log is not up to date ,reject the vote
+	if rf.isMoreUpToDateLocked(args.LastLogIndex, args.LastLogTerm) {
+		LOG(rf.me, rf.currentTerm, DVote, "<- S%d, Reject voted, Candidate less up-to-date", args.CandidateID)
+		return
 	}
 	// all pass ,setting reply
 	reply.VoteGranted = true
@@ -152,6 +175,8 @@ func (rf *Raft) startElection(term int) {
 		return
 		// early stop
 	}
+	l := len(rf.log)
+
 	// build the RPC request for each peer
 	for peer := 0; peer < len(rf.peers); peer++ {
 		if peer == rf.me {
@@ -159,8 +184,8 @@ func (rf *Raft) startElection(term int) {
 			vote++
 			continue
 		}
-		// RPC call
-		args := &RequestVoteArgs{rf.currentTerm, rf.me}
+		// RPC call,update the term & candidate index
+		args := &RequestVoteArgs{rf.currentTerm, rf.me, l - 1, rf.log[l-1].Term}
 		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, AskVote, Args=", peer)
 
 		go askVoteFromPeer(peer, args)
