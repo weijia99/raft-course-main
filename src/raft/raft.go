@@ -33,7 +33,7 @@ const (
 	electionTimeoutMin time.Duration = 250 * time.Millisecond
 	electionTimeOutMax time.Duration = 400 * time.Millisecond
 	// the interval of the log replication
-	replicateInterval time.Duration = 200 * time.Millisecond
+	replicateInterval time.Duration = 70 * time.Millisecond
 )
 
 // define Role:candidate ,follower,leader
@@ -302,6 +302,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// start ticker goroutine to start elections
 	go rf.electionTicker()
-	go rf.applicationTicker()
+	// go rf.applicationTicker()
+	go rf.applyTicker()
+
 	return rf
 }

@@ -42,7 +42,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	// default reply
-	LOG(rf.me, rf.currentTerm, DDebug, "- S%d, Receive log, Prev=[%d]T%d, Len()=%d", args.LeaderID, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+	LOG(rf.me, rf.currentTerm, DDebug, "<- S%d, Receive log, Prev=[%d]T%d, Len()=%d", args.LeaderID, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 
 	reply.Term = rf.currentTerm
 	reply.Success = false
@@ -69,7 +69,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	// start to append the log
 	rf.log = append(rf.log[:args.PrevLogIndex+1], args.Entries...)
 	reply.Success = true
-	LOG(rf.me, rf.currentTerm, DLog2, "Follower accept logs: (%d, %d]", args.PrevLogIndex, args.PrevLogIndex+len(args.Entries))
+	LOG(rf.me, rf.currentTerm, DLog2, "current loglength=%d,Follower accept logs: (%d, %d]", len(rf.log), args.PrevLogIndex, args.PrevLogIndex+len(args.Entries))
 
 	// update the commitIndex
 	if args.LeaderCommit > rf.commitIndex {
@@ -187,7 +187,7 @@ func (rf *Raft) startReplication(term int) bool {
 		preTerm := rf.log[preIdx].Term
 		// build rpc args
 		args := &AppendEntriesArgs{rf.currentTerm, rf.me, preIdx, preTerm, rf.log[preIdx+1:], rf.commitIndex}
-		LOG(rf.me, rf.currentTerm, DDebug, "-&gt; S%d, Send log, Prev=[%d]T%d, Len()=%d", peer, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, Send log,Log length=%d, Prev=[%d]T%d, Len()=%d", peer, len(rf.log), args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
 		go replicateToPeer(peer, args)
 	}
 	return true
