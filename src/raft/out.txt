@@ -1,6 +1,95 @@
+000006 T0000 VOTE S0 follower -> Candidate, For T0->T1
+000009 T0001 DBUG S0 -> S1, AskVote, Args=
+000010 T0001 DBUG S0 -> S2, AskVote, Args=
+000011 T0000 VOTE S1 follower -> Candidate, For T0->T1
 Test (PartB): basic agreement ...
---- FAIL: TestBasicAgreePartB (2.01s)
+000015 T0001 DBUG S1 -> S0, AskVote, Args=
+000015 T0001 DBUG S1 -> S2, AskVote, Args=
+000017 T0000 VOTE S2 follower -> Candidate, For T0->T1
+000019 T0001 DBUG S2 -> S0, AskVote, Args=
+000019 T0001 DBUG S2 -> S1, AskVote, Args=
+000023 T0001 VOTE S2 <- S0, Reject voted, Already voted to S2
+000023 T0001 VOTE S1 <- S0, Reject voted, Already voted to S1
+000024 T0001 VOTE S1 <- S2, Reject voted, Already voted to S1
+000025 T0001 VOTE S2 <- S1, Reject voted, Already voted to S2
+000025 T0001 VOTE S0 <- S1, Reject voted, Already voted to S0
+000026 T0001 DBUG S2 -> S1, AskVote Reply=
+000026 T0001 VOTE S0 <- S2, Reject voted, Already voted to S0
+000027 T0001 DBUG S1 -> S2, AskVote Reply=
+000028 T0001 DBUG S1 -> S0, AskVote Reply=
+000030 T0001 DBUG S0 -> S2, AskVote Reply=
+000031 T0001 DBUG S0 -> S1, AskVote Reply=
+000033 T0001 DBUG S2 -> S0, AskVote Reply=
+001521 T0001 VOTE S1 candidate -> Candidate, For T1->T2
+001523 T0002 DBUG S1 -> S0, AskVote, Args=
+001523 T0002 DBUG S1 -> S2, AskVote, Args=
+001526 T0001 LOG1 S2 candidate->Follower, For T1->T2
+001526 T0002 VOTE S2 Compare last log, Me: [0]T0, Candidate: [0]T0
+001527 T0002 VOTE S2 <- S1, Vote granted
+001528 T0001 LOG1 S0 candidate->Follower, For T1->T2
+001528 T0002 VOTE S0 Compare last log, Me: [0]T0, Candidate: [0]T0
+001528 T0002 VOTE S0 <- S1, Vote granted
+001529 T0002 DBUG S1 -> S2, AskVote Reply=
+001529 T0002 LEAD S1 Become Leader in T2
+001530 T0002 DBUG S1 -&gt; S0, Send log, Prev=[0]T0, Len()=0
+001531 T0002 DBUG S1 -&gt; S2, Send log, Prev=[0]T0, Len()=0
+001531 T0002 DBUG S1 -> S0, AskVote Reply=
+001531 T0002 VOTE S1 -> S0, Lost context, abort RequestVoteReply
+001537 T0002 DBUG S0 - S1, Receive log, Prev=[0]T0, Len()=0
+001538 T0002 LOG1 S0 follower->Follower, For T2->T2
+001538 T0002 LOG2 S0 Follower accept logs: (0, 0]
+001538 T0002 DBUG S2 - S1, Receive log, Prev=[0]T0, Len()=0
+001539 T0002 LOG1 S2 follower->Follower, For T2->T2
+001539 T0002 LOG2 S2 Follower accept logs: (0, 0]
+001540 T0002 DBUG S1 Match index after sort: [0 0 0], majority[1]=0
+001541 T0002 DBUG S1 Match index after sort: [0 0 0], majority[1]=0
+002036 T0002 LEAD S1 Leader accept log [1]T2
+003538 T0002 DBUG S1 -&gt; S0, Send log, Prev=[0]T0, Len()=1
+003539 T0002 DBUG S1 -&gt; S2, Send log, Prev=[0]T0, Len()=1
+003544 T0002 DBUG S0 - S1, Receive log, Prev=[0]T0, Len()=1
+003544 T0002 DBUG S2 - S1, Receive log, Prev=[0]T0, Len()=1
+003544 T0002 LOG1 S0 follower->Follower, For T2->T2
+003545 T0002 LOG1 S2 follower->Follower, For T2->T2
+003545 T0002 LOG2 S0 Follower accept logs: (0, 1]
+003545 T0002 LOG2 S2 Follower accept logs: (0, 1]
+003547 T0002 DBUG S1 Match index after sort: [0 1 1], majority[1]=1
+003547 T0002 APLY S1 Leader update the commit index 0->1
+003547 T0002 DBUG S1 Match index after sort: [1 1 1], majority[1]=1
+006753 T0002 VOTE S0 follower -> Candidate, For T2->T3
+006755 T0003 DBUG S0 -> S1, AskVote, Args=
+006756 T0003 DBUG S0 -> S2, AskVote, Args=
+006766 T0002 LOG1 S2 follower->Follower, For T2->T3
+006767 T0003 VOTE S2 Compare last log, Me: [1]T2, Candidate: [1]T2
+006767 T0003 VOTE S2 <- S0, Vote granted
+006773 T0003 DBUG S0 -> S2, AskVote Reply=
+006773 T0003 LEAD S0 Become Leader in T3
+006773 T0003 DBUG S0 -&gt; S1, Send log, Prev=[1]T2, Len()=0
+006774 T0003 DBUG S0 -&gt; S2, Send log, Prev=[1]T2, Len()=0
+006776 T0003 DBUG S2 - S0, Receive log, Prev=[1]T2, Len()=0
+006776 T0003 LOG1 S2 follower->Follower, For T3->T3
+006777 T0003 LOG2 S2 Follower accept logs: (1, 1]
+006778 T0003 DBUG S0 Match index after sort: [0 1 1], majority[1]=1
+006779 T0003 APLY S0 Leader update the commit index 0->1
+010740 T0003 VOTE S2 follower -> Candidate, For T3->T4
+010741 T0004 DBUG S2 -> S0, AskVote, Args=
+010742 T0004 DBUG S2 -> S1, AskVote, Args=
+012343 T0004 VOTE S2 candidate -> Candidate, For T4->T5
+012347 T0005 DBUG S2 -> S0, AskVote, Args=
+012348 T0005 DBUG S2 -> S1, AskVote, Args=
+013740 T0005 VOTE S2 candidate -> Candidate, For T5->T6
+013742 T0006 DBUG S2 -> S0, AskVote, Args=
+013742 T0006 DBUG S2 -> S1, AskVote, Args=
+017110 T0006 VOTE S2 candidate -> Candidate, For T6->T7
+017112 T0007 DBUG S2 -> S0, AskVote, Args=
+017112 T0007 DBUG S2 -> S1, AskVote, Args=
+017850 T0007 VOTE S2 candidate -> Candidate, For T7->T8
+017852 T0008 DBUG S2 -> S0, AskVote, Args=
+017853 T0008 DBUG S2 -> S1, AskVote, Args=
+020872 T0008 VOTE S2 candidate -> Candidate, For T8->T9
+020873 T0009 DBUG S2 -> S0, AskVote, Args=
+020874 T0009 DBUG S2 -> S1, AskVote, Args=
+--- FAIL: TestBasicAgreePartB (2.21s)
     config.go:597: one(100) failed to reach agreement
 FAIL
 exit status 1
-FAIL	course/raft	2.010s
+FAIL	course/raft	2.223s

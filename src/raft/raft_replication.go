@@ -76,6 +76,9 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		LOG(rf.me, rf.currentTerm, DApply, "Follower update the commit index %d->%d", rf.commitIndex, args.LeaderCommit)
 
 		rf.commitIndex = args.LeaderCommit
+		if rf.commitIndex >= len(rf.log) {
+			rf.commitIndex = len(rf.log) - 1
+		}
 		// start to apply the log entry
 		rf.applyCond.Signal()
 	}
@@ -98,10 +101,10 @@ func (rf *Raft) getMajorityIndexLocked() int {
 	copy(tmpIndex, rf.matchIndex)
 	// sort the index
 	sort.Ints(sort.IntSlice(tmpIndex))
-	majorityIdx := tmpIndex[(len(rf.peers)-1)/2]
+	majorityIdx := (len(tmpIndex) - 1) / 2
 	LOG(rf.me, rf.currentTerm, DDebug, "Match index after sort: %v, majority[%d]=%d", tmpIndex, majorityIdx, tmpIndex[majorityIdx])
 
-	return rf.matchIndex[majorityIdx]
+	return tmpIndex[majorityIdx]
 }
 
 func (rf *Raft) startReplication(term int) bool {
@@ -129,7 +132,9 @@ func (rf *Raft) startReplication(term int) bool {
 		// handle the reply
 		//if prev not matched ,try to reduce the nextIndex
 		if !reply.Success {
-			idx, term := args.PrevLogIndex, args.PrevLogTerm
+			// idx, term := args.PrevLogIndex, args.PrevLogTerm
+			idx := rf.nextIndex[peer] - 1
+			term := rf.log[idx].Term
 			for idx > 0 && rf.log[idx].Term == term {
 				// all the log entries with the same term should be removed
 				idx--

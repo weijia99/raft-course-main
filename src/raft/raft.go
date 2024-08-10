@@ -123,18 +123,15 @@ func (rf *Raft) becomeFollowerLocked(term int) {
 func (rf *Raft) becomeCandidateLocked() {
 	// compare term ,if term is lower than rf.term ,do not change
 	if rf.role == Leader {
-		// add log
 		LOG(rf.me, rf.currentTerm, DError, "Leader can't become Candidate")
 		return
 	}
-	// log
-	LOG(rf.me, rf.currentTerm, DVote, "%s->Candidate, For T%d", rf.role, rf.currentTerm+1)
+
+	LOG(rf.me, rf.currentTerm, DVote, "%s -> Candidate, For T%d->T%d",
+		rf.role, rf.currentTerm, rf.currentTerm+1)
 	rf.role = Candidate
-	// 选举人的任期+1,并且投票自己
 	rf.currentTerm++
 	rf.votedFor = rf.me
-	// me 代表序号
-	// all term
 
 }
 
@@ -296,6 +293,9 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.votedFor = -1
 
 	rf.applyCh = applyCh
+	rf.lastApplied = 0
+	rf.commitIndex = 0
+
 	rf.applyCond = sync.NewCond(&rf.mu)
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
