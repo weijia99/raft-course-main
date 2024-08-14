@@ -1,6 +1,7 @@
 package raft
 
 import (
+	"fmt"
 	"sort"
 	"time"
 )
@@ -33,6 +34,30 @@ type AppendEntriesArgs struct {
 type AppendEntriesReply struct {
 	Term    int
 	Success bool
+	// the index of the log entry which is not matched
+	// fast retry the log entry
+	ConfilictIndex int
+	ConfilictTerm  int
+}
+
+func (rf *Raft) firstIndexFor(term int) int {
+	// find the first index of the log entry with the same term
+	for idx, entry := range rf.log {
+		if entry.Term == term {
+			return idx
+		} else if entry.Term > term {
+			break
+		}
+	}
+	return InvalidIndex
+}
+func (args *AppendEntriesArgs) String() string {
+	return fmt.Sprintf("Leader-%d, T%d, Prev:[%d]T%d, (%d, %d], CommitIdx: %d",
+		args.LeaderID, args.Term, args.PrevLogIndex, args.PrevLogTerm,
+		args.PrevLogIndex, args.PrevLogIndex+len(args.Entries), args.LeaderCommit)
+}
+func (reply *AppendEntriesReply) String() string {
+	return fmt.Sprintf("T%d, Sucess: %v, ConflictTerm: [%d]T%d", reply.Term, reply.Success, reply.ConfilictIndex, reply.ConfilictTerm)
 }
 
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
@@ -42,32 +67,49 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	// default reply
-	LOG(rf.me, rf.currentTerm, DDebug, "<- S%d, Receive log, Prev=[%d]T%d, Len()=%d", args.LeaderID, args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+	LOG(rf.me, rf.currentTerm, DDebug, "<- S%d, Append, Prev=[%d]T%d, Commit: %d", args.LeaderID, args.PrevLogIndex, args.PrevLogTerm, args.LeaderCommit)
 
 	reply.Term = rf.currentTerm
 	reply.Success = false
 
 	if args.Term < rf.currentTerm {
-		LOG(rf.me, rf.currentTerm, DLog2, "<-S%d,Reject log,Higher term,T%d<T%d", args.LeaderID, args.Term, rf.currentTerm)
+		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Higher term, T%d<T%d", args.LeaderID, args.Term, rf.currentTerm)
 		return
 	}
 	if args.Term >= rf.currentTerm {
 		rf.becomeFollowerLocked(args.Term)
 	}
+	// reset clock
+	// rf.resetElectionTimeLocked()
+	defer func() {
+		rf.resetElectionTimeLocked()
+		if !reply.Success {
+			LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Follower Conflict: [%d]T%d", args.LeaderID, reply.ConfilictIndex, reply.ConfilictTerm)
+			LOG(rf.me, rf.currentTerm, DDebug, "Follower log=%v", rf.logString())
+		}
+	}()
 	if args.PrevLogIndex >= len(rf.log) {
 		// leader log's index is larger than the follower's log size
 		// its obvious that the follower's log cant find the index in its log,so reject
 		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Follower log too short, Len:%d < Prev:%d", args.LeaderID, len(rf.log), args.PrevLogIndex)
+		// update the confilict index
+		reply.ConfilictIndex = len(rf.log)
+		reply.ConfilictTerm = InvalidTerm
 		return
 	}
 	if rf.log[args.PrevLogIndex].Term != args.PrevLogTerm {
 		// the term of the log entry is not the same as the leader's log entry
 		// reject
+		reply.ConfilictTerm = rf.log[args.PrevLogIndex].Term
+		// find the first index of the log entry with the same term
+		reply.ConfilictIndex = rf.firstIndexFor(reply.ConfilictTerm)
 		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Term not match, T%d != T%d", args.LeaderID, rf.log[args.PrevLogIndex].Term, args.PrevLogTerm)
 		return
 	}
 	// start to append the log
 	rf.log = append(rf.log[:args.PrevLogIndex+1], args.Entries...)
+	// update log,persister
+	rf.persistLocked()
 	reply.Success = true
 	LOG(rf.me, rf.currentTerm, DLog2, "current loglength=%d,Follower accept logs: (%d, %d]", len(rf.log), args.PrevLogIndex, args.PrevLogIndex+len(args.Entries))
 
@@ -83,8 +125,6 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		rf.applyCond.Signal()
 	}
 
-	// reset clock
-	rf.resetElectionTimeLocked()
 }
 
 func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
@@ -119,6 +159,7 @@ func (rf *Raft) startReplication(term int) bool {
 			return
 
 		}
+		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, Append, Reply=%v", peer, reply.String())
 		// aligne the term
 		if reply.Term > rf.currentTerm {
 			rf.becomeFollowerLocked(reply.Term)
@@ -132,15 +173,33 @@ func (rf *Raft) startReplication(term int) bool {
 		// handle the reply
 		//if prev not matched ,try to reduce the nextIndex
 		if !reply.Success {
-			// idx, term := args.PrevLogIndex, args.PrevLogTerm
-			idx := rf.nextIndex[peer] - 1
-			term := rf.log[idx].Term
-			for idx > 0 && rf.log[idx].Term == term {
-				// all the log entries with the same term should be removed
-				idx--
+			// // idx, term := args.PrevLogIndex, args.PrevLogTerm
+			// idx := rf.nextIndex[peer] - 1
+			// term := rf.log[idx].Term
+			// for idx > 0 && rf.log[idx].Term == term {
+			// 	// all the log entries with the same term should be removed
+			// 	idx--
+			// }
+			// rf.nextIndex[peer] = idx + 1
+			prevNext := rf.nextIndex[peer]
+			if reply.ConfilictTerm == InvalidTerm {
+				rf.nextIndex[peer] = reply.ConfilictIndex
+			} else {
+				// leader 回退到term的第一个index
+				firstTermIndex := rf.firstIndexFor(reply.ConfilictTerm)
+				if firstTermIndex != InvalidIndex {
+					rf.nextIndex[peer] = firstTermIndex + 1
+				} else {
+					rf.nextIndex[peer] = reply.ConfilictIndex
+				}
 			}
-			rf.nextIndex[peer] = idx + 1
-			LOG(rf.me, rf.currentTerm, DLog, "Not mathed with s%d in term %d,try next %d", peer, args.PrevLogIndex, rf.nextIndex[peer])
+			// avoid the late reply move the nextIndex forward again
+			if rf.nextIndex[peer] > prevNext {
+				rf.nextIndex[peer] = prevNext
+			}
+			LOG(rf.me, rf.currentTerm, DLog, "-> S%d, Not matched at Prev=[%d]T%d, Try next Prev=[%d]T%d", peer, args.PrevLogIndex, rf.log[args.PrevLogIndex].Term, rf.nextIndex[peer]-1, rf.log[rf.nextIndex[peer]-1].Term)
+			LOG(rf.me, rf.currentTerm, DDebug, "Leader log=%v", rf.logString())
+			// LOG(rf.me, rf.currentTerm, DLog, "Not mathed with s%d in term %d,try next %d", peer, args.PrevLogIndex, rf.nextIndex[peer])
 			return
 		}
 		// update the matchIndex,prev is start ,len is the length of the entries
@@ -154,7 +213,7 @@ func (rf *Raft) startReplication(term int) bool {
 		// so we can update commitIndex,that means the log entry has been committed
 		// the commitIndex is the last index of the log entry that has been committed
 		majorityMatched := rf.getMajorityIndexLocked()
-		if majorityMatched > rf.commitIndex {
+		if majorityMatched > rf.commitIndex && rf.log[majorityMatched].Term == rf.currentTerm {
 			LOG(rf.me, rf.currentTerm, DApply, "Leader update the commit index %d->%d", rf.commitIndex, majorityMatched)
 
 			rf.commitIndex = majorityMatched
@@ -187,7 +246,7 @@ func (rf *Raft) startReplication(term int) bool {
 		preTerm := rf.log[preIdx].Term
 		// build rpc args
 		args := &AppendEntriesArgs{rf.currentTerm, rf.me, preIdx, preTerm, rf.log[preIdx+1:], rf.commitIndex}
-		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, Send log,Log length=%d, Prev=[%d]T%d, Len()=%d", peer, len(rf.log), args.PrevLogIndex, args.PrevLogTerm, len(args.Entries))
+		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, Append, %v", peer, args.String())
 		go replicateToPeer(peer, args)
 	}
 	return true

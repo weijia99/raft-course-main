@@ -1,9 +1,17 @@
 package raft
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
+
+func (args *RequestVoteArgs) String() string {
+	return fmt.Sprintf("Candidate-%d T%d, Last:[%d]T%d", args.CandidateID, args.Term, args.LastLogIndex, args.LastLogTerm)
+}
+func (reply *RequestVoteReply) String() string {
+	return fmt.Sprintf("T%d, VoteGranted: %v", reply.Term, reply.VoteGranted)
+}
 
 // reset the election time out
 func (rf *Raft) resetElectionTimeLocked() {
@@ -62,6 +70,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// what should server do
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+	LOG(rf.me, rf.currentTerm, DDebug, "<- S%d, VoteAsked, Args=%v", args.CandidateID, args.String())
+
 	reply.Term = rf.currentTerm
 	reply.VoteGranted = false
 	// if the term is lower than the current term ,reject the vote
@@ -88,6 +98,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// all pass ,setting reply
 	reply.VoteGranted = true
 	rf.votedFor = args.CandidateID
+	// persist the votedFor
+	rf.persistLocked()
 	// reset clock
 	rf.resetElectionTimeLocked()
 	LOG(rf.me, rf.currentTerm, DVote, "<- S%d, Vote granted", args.CandidateID)
@@ -143,7 +155,7 @@ func (rf *Raft) startElection(term int) {
 			LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, Ask vote, Lost or error", peer)
 			return
 		}
-		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, AskVote Reply=", peer)
+		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, AskVote Reply=%v", peer, reply.String())
 
 		// if currentTerm is lower than peer,become follower
 		if reply.Term > rf.currentTerm {
@@ -186,7 +198,7 @@ func (rf *Raft) startElection(term int) {
 		}
 		// RPC call,update the term & candidate index
 		args := &RequestVoteArgs{rf.currentTerm, rf.me, l - 1, rf.log[l-1].Term}
-		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, AskVote, Args=", peer)
+		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, AskVote, Args=%v", peer, args.String())
 
 		go askVoteFromPeer(peer, args)
 	}
