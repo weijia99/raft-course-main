@@ -7,7 +7,7 @@ import (
 )
 
 func (rf *Raft) persistString() string {
-	return fmt.Sprintf("T%d, VotedFor: %d, Log: [0: %d)", rf.currentTerm, rf.votedFor, len(rf.log))
+	return fmt.Sprintf("T%d, VotedFor: %d, Log: [0: %d)", rf.currentTerm, rf.votedFor, rf.log.size())
 }
 
 // save Raft's persistent state to stable storage,
@@ -24,9 +24,10 @@ func (rf *Raft) persistLocked() {
 	e := labgob.NewEncoder(w)
 	e.Encode(rf.currentTerm)
 	e.Encode(rf.votedFor)
-	e.Encode(rf.log)
+	// e.Encode(rf.log)
+	rf.log.persist(e)
 	raftstate := w.Bytes()
-	rf.persister.Save(raftstate, nil)
+	rf.persister.Save(raftstate, rf.log.snapshot)
 }
 
 // restore previously persisted state.
@@ -38,7 +39,7 @@ func (rf *Raft) readPersist(data []byte) {
 	// Example:
 	var currentTerm int
 	var votedFor int
-	var log []LogEntry
+	// var log []LogEntry
 	r := bytes.NewBuffer(data)
 	d := labgob.NewDecoder(r)
 	if err := d.Decode(&currentTerm); err != nil {
@@ -52,10 +53,15 @@ func (rf *Raft) readPersist(data []byte) {
 	}
 	rf.votedFor = votedFor
 
-	if err := d.Decode(&log); err != nil {
+	if err := rf.log.readPersist(d); err != nil {
 		LOG(rf.me, rf.currentTerm, DPersist, "Read log error: %v", err)
 		return
 	}
-	rf.log = log
+	// 获取反序列化的snapshot
+	rf.log.snapshot = rf.persister.ReadSnapshot()
 	LOG(rf.me, rf.currentTerm, DPersist, "Read Persist %v", rf.persistString())
+	if rf.log.snapLastIdx > rf.commitIndex {
+		rf.commitIndex = rf.log.snapLastIdx
+		rf.lastApplied = rf.log.snapLastIdx
+	}
 }

@@ -40,17 +40,18 @@ type AppendEntriesReply struct {
 	ConfilictTerm  int
 }
 
-func (rf *Raft) firstIndexFor(term int) int {
-	// find the first index of the log entry with the same term
-	for idx, entry := range rf.log {
-		if entry.Term == term {
-			return idx
-		} else if entry.Term > term {
-			break
-		}
-	}
-	return InvalidIndex
-}
+//	func (rf *Raft) firstIndexFor(term int) int {
+//		// find the first index of the log entry with the same term
+//		for idx, entry := range rf.log.tailLog {
+//			// remeber this is the tailLog,not global log
+//			if entry.Term == term {
+//				return idx + rf.log.snapLastIdx
+//			} else if entry.Term > term {
+//				break
+//			}
+//		}
+//		return InvalidIndex
+//	}
 func (args *AppendEntriesArgs) String() string {
 	return fmt.Sprintf("Leader-%d, T%d, Prev:[%d]T%d, (%d, %d], CommitIdx: %d",
 		args.LeaderID, args.Term, args.PrevLogIndex, args.PrevLogTerm,
@@ -88,38 +89,39 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 			LOG(rf.me, rf.currentTerm, DDebug, "Follower log=%v", rf.logString())
 		}
 	}()
-	if args.PrevLogIndex >= len(rf.log) {
+	if args.PrevLogIndex >= rf.log.size() {
 		// leader log's index is larger than the follower's log size
 		// its obvious that the follower's log cant find the index in its log,so reject
-		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Follower log too short, Len:%d < Prev:%d", args.LeaderID, len(rf.log), args.PrevLogIndex)
+		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Follower log too short, Len:%d < Prev:%d", args.LeaderID, rf.log.size(), args.PrevLogIndex)
 		// update the confilict index
-		reply.ConfilictIndex = len(rf.log)
+		reply.ConfilictIndex = rf.log.size()
 		reply.ConfilictTerm = InvalidTerm
 		return
 	}
-	if rf.log[args.PrevLogIndex].Term != args.PrevLogTerm {
+	if rf.log.at(args.PrevLogIndex).Term != args.PrevLogTerm {
 		// the term of the log entry is not the same as the leader's log entry
 		// reject
-		reply.ConfilictTerm = rf.log[args.PrevLogIndex].Term
+		reply.ConfilictTerm = rf.log.at(args.PrevLogIndex).Term
 		// find the first index of the log entry with the same term
-		reply.ConfilictIndex = rf.firstIndexFor(reply.ConfilictTerm)
-		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Term not match, T%d != T%d", args.LeaderID, rf.log[args.PrevLogIndex].Term, args.PrevLogTerm)
+		reply.ConfilictIndex = rf.log.firstFor(reply.ConfilictTerm)
+		LOG(rf.me, rf.currentTerm, DLog2, "<- S%d, Reject log, Term not match, T%d != T%d", args.LeaderID, rf.log.at(args.PrevLogIndex).Term, args.PrevLogTerm)
 		return
 	}
 	// start to append the log
-	rf.log = append(rf.log[:args.PrevLogIndex+1], args.Entries...)
+	// rf.log = append(rf.log.tail[:args.PrevLogIndex+1], args.Entries...)
+	rf.log.appendFrom(args.PrevLogIndex, args.Entries)
 	// update log,persister
 	rf.persistLocked()
 	reply.Success = true
-	LOG(rf.me, rf.currentTerm, DLog2, "current loglength=%d,Follower accept logs: (%d, %d]", len(rf.log), args.PrevLogIndex, args.PrevLogIndex+len(args.Entries))
+	LOG(rf.me, rf.currentTerm, DLog2, "current loglength=%d,Follower accept logs: (%d, %d]", rf.log.size(), args.PrevLogIndex, args.PrevLogIndex+len(args.Entries))
 
 	// update the commitIndex
 	if args.LeaderCommit > rf.commitIndex {
 		LOG(rf.me, rf.currentTerm, DApply, "Follower update the commit index %d->%d", rf.commitIndex, args.LeaderCommit)
 
 		rf.commitIndex = args.LeaderCommit
-		if rf.commitIndex >= len(rf.log) {
-			rf.commitIndex = len(rf.log) - 1
+		if rf.commitIndex >= rf.log.size() {
+			rf.commitIndex = rf.log.size() - 1
 		}
 		// start to apply the log entry
 		rf.applyCond.Signal()
@@ -186,7 +188,7 @@ func (rf *Raft) startReplication(term int) bool {
 				rf.nextIndex[peer] = reply.ConfilictIndex
 			} else {
 				// leader 回退到term的第一个index
-				firstTermIndex := rf.firstIndexFor(reply.ConfilictTerm)
+				firstTermIndex := rf.log.firstFor(reply.ConfilictTerm)
 				if firstTermIndex != InvalidIndex {
 					rf.nextIndex[peer] = firstTermIndex + 1
 				} else {
@@ -197,7 +199,7 @@ func (rf *Raft) startReplication(term int) bool {
 			if rf.nextIndex[peer] > prevNext {
 				rf.nextIndex[peer] = prevNext
 			}
-			LOG(rf.me, rf.currentTerm, DLog, "-> S%d, Not matched at Prev=[%d]T%d, Try next Prev=[%d]T%d", peer, args.PrevLogIndex, rf.log[args.PrevLogIndex].Term, rf.nextIndex[peer]-1, rf.log[rf.nextIndex[peer]-1].Term)
+			LOG(rf.me, rf.currentTerm, DLog, "-> S%d, Not matched at Prev=[%d]T%d, Try next Prev=[%d]T%d", peer, args.PrevLogIndex, rf.log.at(args.PrevLogIndex).Term, rf.nextIndex[peer]-1, rf.log.at(rf.nextIndex[peer]-1).Term)
 			LOG(rf.me, rf.currentTerm, DDebug, "Leader log=%v", rf.logString())
 			// LOG(rf.me, rf.currentTerm, DLog, "Not mathed with s%d in term %d,try next %d", peer, args.PrevLogIndex, rf.nextIndex[peer])
 			return
@@ -213,7 +215,7 @@ func (rf *Raft) startReplication(term int) bool {
 		// so we can update commitIndex,that means the log entry has been committed
 		// the commitIndex is the last index of the log entry that has been committed
 		majorityMatched := rf.getMajorityIndexLocked()
-		if majorityMatched > rf.commitIndex && rf.log[majorityMatched].Term == rf.currentTerm {
+		if majorityMatched > rf.commitIndex && rf.log.at(majorityMatched).Term == rf.currentTerm {
 			LOG(rf.me, rf.currentTerm, DApply, "Leader update the commit index %d->%d", rf.commitIndex, majorityMatched)
 
 			rf.commitIndex = majorityMatched
@@ -236,16 +238,28 @@ func (rf *Raft) startReplication(term int) bool {
 	for peer := 0; peer < len(rf.peers); peer++ {
 		if peer == rf.me {
 			// update the matchIndex
-			rf.matchIndex[peer] = len(rf.log) - 1
+			rf.matchIndex[peer] = rf.log.size() - 1
 			// next index is the last log index +1
-			rf.nextIndex[peer] = len(rf.log)
+			rf.nextIndex[peer] = rf.log.size()
 			continue
 		}
 		// record the last log index
 		preIdx := rf.nextIndex[peer] - 1
-		preTerm := rf.log[preIdx].Term
+		if preIdx < rf.log.snapLastIdx {
+			args := &InstallSnapshotArgs{
+				Term:             rf.currentTerm,
+				LeaderId:         rf.me,
+				LastIncludeIndex: rf.log.snapLastIdx,
+				LastIncludeTerm:  rf.log.snapLastTerm,
+				SnapShot:         rf.log.snapshot,
+			}
+			LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, InstallSnap, Args=%v", peer, args.String())
+			go rf.installOnPeer(peer, term, args)
+			continue
+		}
+		preTerm := rf.log.at(preIdx).Term
 		// build rpc args
-		args := &AppendEntriesArgs{rf.currentTerm, rf.me, preIdx, preTerm, rf.log[preIdx+1:], rf.commitIndex}
+		args := &AppendEntriesArgs{rf.currentTerm, rf.me, preIdx, preTerm, rf.log.tail(preIdx + 1), rf.commitIndex}
 		LOG(rf.me, rf.currentTerm, DDebug, "-> S%d, Append, %v", peer, args.String())
 		go replicateToPeer(peer, args)
 	}

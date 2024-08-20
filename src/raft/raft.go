@@ -85,8 +85,8 @@ type Raft struct {
 
 	role        Role
 	currentTerm int
-	votedFor    int        //vote who (-1 present null)
-	log         []LogEntry //local log sequence
+	votedFor    int      //vote who (-1 present null)
+	log         *RaftLog //local log sequence
 	// both of the nextIndex and matchIndex length is equal to the peers
 	nextIndex  []int //next index of each server(from which index to send)
 	matchIndex []int //match	index of each server(from which index to send)
@@ -98,6 +98,7 @@ type Raft struct {
 	commitIndex int
 	lastApplied int
 	applyCh     chan ApplyMsg
+	snapPending bool
 	applyCond   *sync.Cond
 	// Your data here (PartA, PartB, PartC).
 	// add yourself struct
@@ -108,16 +109,16 @@ type Raft struct {
 
 func (rf *Raft) logString() string {
 	var terms string
-	prevTerm := rf.log[0].Term
+	prevTerm := rf.log.at(0).Term
 	prevStart := 0
-	for i := 0; i < len(rf.log); i++ {
-		if rf.log[i].Term != prevTerm {
+	for i := 0; i < rf.log.size(); i++ {
+		if rf.log.at(i).Term != prevTerm {
 			terms += fmt.Sprintf(" [%d, %d]T%d;", prevStart, i-1, prevTerm)
-			prevTerm = rf.log[i].Term
+			prevTerm = rf.log.at(i).Term
 			prevStart = i
 		}
 	}
-	terms += fmt.Sprintf(" [%d, %d]T%d;", prevStart, len(rf.log)-1, prevTerm)
+	terms += fmt.Sprintf(" [%d, %d]T%d;", prevStart, rf.log.size()-1, prevTerm)
 
 	return terms
 }
@@ -175,7 +176,7 @@ func (rf *Raft) becomeLeaderLocked() {
 	rf.role = Leader
 	// init the nextIndex and matchIndex
 	for peer := 0; peer < len(rf.peers); peer++ {
-		rf.nextIndex[peer] = len(rf.log)
+		rf.nextIndex[peer] = rf.log.size()
 		// 假设从后往前匹配，不成功就减少
 		rf.matchIndex[peer] = 0
 		// 一开始就没有匹配的
@@ -193,15 +194,6 @@ func (rf *Raft) GetState() (int, bool) {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	return rf.currentTerm, rf.role == Leader
-}
-
-// the service says it has created a snapshot that has
-// all info up to and including index. this means the
-// service no longer needs the log through (and including)
-// that index. Raft should now trim its log as much as possible.
-func (rf *Raft) Snapshot(index int, snapshot []byte) {
-	// Your code here (PartD).
-
 }
 
 // the service using Raft (e.g. a k/v server) wants to start
@@ -223,15 +215,15 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	if rf.role != Leader {
 		return 0, 0, false
 	}
-	rf.log = append(rf.log, LogEntry{
+	rf.log.append(LogEntry{
 		true,
 		command,
 		rf.currentTerm,
 	})
 	rf.persistLocked()
-	LOG(rf.me, rf.currentTerm, DLeader, "Leader accept log [%d]T%d", len(rf.log)-1, rf.currentTerm)
+	LOG(rf.me, rf.currentTerm, DLeader, "Leader accept log [%d]T%d", rf.log.size()-1, rf.currentTerm)
 
-	return len(rf.log) - 1, rf.currentTerm, true
+	return rf.log.size() - 1, rf.currentTerm, true
 }
 
 // the tester doesn't halt goroutines created by Raft after each test,
@@ -272,7 +264,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.peers = peers
 	rf.persister = persister
 	rf.me = me
-	rf.log = append(rf.log, LogEntry{}) //like dummy head
+	// rf.log.tailLog = append(rf.log.tailLog, LogEntry{}) //like dummy head
+	rf.log = NewLog(InvalidIndex, InvalidTerm, nil, nil)
 	// Your initialization code here (PartA, PartB, PartC).
 	/*
 		init the filed that you have added
@@ -282,7 +275,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.role = Follower
 	rf.currentTerm = 1
 	rf.votedFor = -1
-
+	rf.snapPending = false
 	rf.applyCh = applyCh
 	rf.lastApplied = 0
 	rf.commitIndex = 0
@@ -294,7 +287,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	// start ticker goroutine to start elections
 	go rf.electionTicker()
 	// go rf.applicationTicker()
-	go rf.applyTicker()
+	go rf.applicationTicker()
 
 	return rf
 }
